@@ -27,7 +27,7 @@ const Header = (props) => {
                 <LinkIcon w={10} h={10}/>
             </Box>
             <Box>
-                <Heading size="lg">PairDrop</Heading>
+                <Heading size="lg">Pair<span style={{color: "#6A4DF4"}}>Drop</span></Heading>
             </Box>
         </HStack>
         <Spacer />

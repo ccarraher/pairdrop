@@ -3,8 +3,9 @@ import Peer from 'simple-peer';
 import io from 'socket.io-client';
 import { useState, useEffect, useRef } from 'react';
 import Header from './Header'
-import { Heading, Box } from "@chakra-ui/react"
+import { Heading, Box, Center, Text, Modal, ModalContent, ModalOverlay, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, useToast, Image } from "@chakra-ui/react"
 import PeerAvatar from './PeerAvatar';
+import ShareRequest from './ShareRequest';
 
 function App() {
   const [requested, setRequested] = useState(false);
@@ -20,6 +21,8 @@ function App() {
   const [file, setFile] = useState(null);
   const [receivedFilePreview, setReceivedFilePreview] = useState("");
   const socket = useRef();
+  const { isOpen, onOpen, onClose} = useDisclosure()
+  const toast = useToast();
 
   const peerInstance = useRef();
 
@@ -140,28 +143,61 @@ function App() {
     });
     peerInstance.current = peer;
   };
-  useEffect(
-    () => () => {
+  useEffect(() => () => {
       URL.revokeObjectURL(receivedFilePreview);
-    },
-    [receivedFilePreview]
-  );
+    },[receivedFilePreview]);
   
   return (
     <div className="App">
       <Header />
-      <Heading isCentered>
-        You are known as {myUsername}
+      <Heading className="username-header" p={20}>
+        <Center className="username-div">
+          Others will see you as: <span style={{color: "#6A4DF4", fontWeight: "bolder"}}>{myUsername}</span>
+        </Center>
       </Heading>
       <Box>
+        <Center>
+          <Heading size="lg" style={{opacity: 0.5}}>Drag and drop or click on a user to send a file</Heading>
+        </Center>
         {usersList.length > 1 ? usersList.map(({username, timestamp}) => username !== myUsername &&
-          <PeerAvatar key={username} myUsername={username} timestamp={timestamp} sendRequest={sendRequest} disabled={!file || loading}/>
+          <PeerAvatar key={username} myUsername={username} timestamp={timestamp} sendRequest={sendRequest} disabled={!file || loading} setFile={setFile}/>
           ) :
-          <div>
-            No users online right now!
-          </div>
+          <Text>
+            <Center>
+              Open PairDrop on another device to send files!
+            </Center>
+          </Text>
         }
       </Box>
+      <Modal isOpen={isOpen} onOpen={receivedFilePreview !== "" || sending || receiving || sentRequest || rejected || requested} 
+        onClose={() => {
+          if (!sending || !receiving || !sentRequest || !requested)
+            setReceivedFilePreview("");
+          setRejected(false);
+        }}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Request sent</ModalHeader>
+            {requested &&
+            <ShareRequest acceptRequest={acceptRequest} rejectRequest={rejectRequest} peerUsername={peerUsername} />
+            }
+            {rejected &&
+            <ModalBody>{`${peerUsername} rejected your request, sorry!`}</ModalBody>
+            }
+            {receivedFilePreview &&
+              toast({
+                title: "Successfully received",
+                description: `${peerUsername} sent you a file`,
+                status: "success",
+                duration: 6000,
+                isClosable: true,
+              }),
+              <Box>
+                <Image src={receivedFilePreview} />
+              </Box>
+            }
+          </ModalContent>
+      </Modal>
     </div>
   );
 }
