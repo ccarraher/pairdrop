@@ -1,22 +1,23 @@
 import React from 'react'
-import {Heading, Box, Avatar, Center, Spacer, Button} from '@chakra-ui/react'
+import {Heading, Box, Avatar, Center, HStack, Button, Spacer} from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
 import {useDropzone} from 'react-dropzone'
 
-export default function PeerAvatar({myUsername, timestamp, sendRequest, disabled, setFile}) {
+export default function PeerAvatar({myUsername, timestamp, sendRequest, disabled, setFile, setFileName}) {
     const [filePreview, setFilePreview] = useState("");
+    const [fName, setFName] = useState("");
     const {getRootProps, getInputProps} = useDropzone({
         multiple: true,
         accept: 'video/*, image/*, audio/*, .pdf, .doc, .docx',
         onDropAccepted: acceptedFiles => {
             setFile(acceptedFiles[0]);
             setFilePreview(URL.createObjectURL(acceptedFiles[0]));
+            setFName(acceptedFiles[0].name);
         },
     });
     const handleSendRequest = (e) => {
         e.stopPropagation();
         sendRequest(myUsername);
-        console.log("Request sent!");
     }
     useEffect(() => () => {
         // Make sure to revoke the data uris to avoid memory leaks
@@ -27,13 +28,18 @@ export default function PeerAvatar({myUsername, timestamp, sendRequest, disabled
             <Center>
                     <Box boxShadow="base" borderWidth={1} display={{ md: "flex" }} maxWidth="32rem" margin={2} p={4} borderRadius="30px" _hover={{backgroundColor: "#EDF2F7", cursor: "pointer"}}>
                         <div {...getRootProps({className: 'dropzone'})}>
-                            <Avatar name={myUsername} />
+                            <HStack>
+                                <Avatar name={myUsername} />
+                                <Heading>
+                                    {myUsername}
+                                </Heading>
+                            </HStack>
                             <Spacer p={2}/>
-                            <Heading>
-                                {myUsername}
-                            </Heading>
-                            {typeof sendRequest === "function" &&
-                            <Button disabled={disabled} id="send-button" variant="solid" size="lg" style={{backgroundColor: "#6A4DF4"}} onClick={handleSendRequest}>Send</Button>}
+                            <HStack>
+                                {typeof sendRequest === "function" &&
+                                    <Button disabled={disabled} id="send-button" variant="solid" size="sm" width="inherit" style={{backgroundColor: "#6A4DF4"}} onClick={handleSendRequest}>Send</Button>}
+                                <div>{fName}</div>
+                            </HStack>
                             <input {...getInputProps()}/>
                         </div>
                     </Box>

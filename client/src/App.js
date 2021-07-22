@@ -3,7 +3,7 @@ import Peer from 'simple-peer';
 import io from 'socket.io-client';
 import { useState, useEffect, useRef } from 'react';
 import Header from './Header'
-import { Heading, Box, Center, Text, Modal, ModalContent, ModalOverlay, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, useToast, Image } from "@chakra-ui/react"
+import { Heading, Box, Center, Text, Modal, ModalContent, ModalOverlay, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Image, Spinner, Button, ButtonGroup } from "@chakra-ui/react"
 import PeerAvatar from './PeerAvatar';
 import ShareRequest from './ShareRequest';
 
@@ -22,7 +22,7 @@ function App() {
   const [receivedFilePreview, setReceivedFilePreview] = useState("");
   const socket = useRef();
   const { isOpen, onOpen, onClose} = useDisclosure()
-  const toast = useToast();
+  const [fileName, setFileName] = useState("");
 
   const peerInstance = useRef();
 
@@ -93,13 +93,17 @@ function App() {
     });
     const fileChunks = [];
     peer.on("data", data => {
+      console.log(data.toString());
       if (data.toString() === "EOF") {
-        const file = new Blob(fileChunks);
-        setReceivedFilePreview(URL.createObjectURL(file));
+        const file_blob = new Blob(fileChunks);
+        setReceivedFilePreview(URL.createObjectURL(file_blob));
         setReceiving(false);
       } else {
         fileChunks.push(data);
       }
+      let lastItem = fileChunks[fileChunks.length - 1];
+      let file_name = lastItem.toString();
+      setFileName(file_name);
     });
     peer.signal(peerSignal);
     peerInstance.current = peer;
@@ -132,6 +136,7 @@ function App() {
       setSentRequest(false);
       let buffer = await file.arrayBuffer();
       const chunkSize = 16 * 1024;
+      let filename = file.name;
       while (buffer.byteLength) {
         const chunk = buffer.slice(0, chunkSize);
         buffer = buffer.slice(chunkSize, buffer.byteLength);
@@ -139,14 +144,27 @@ function App() {
         peer.send(chunk);
       }
       peer.send("EOF");
+      peer.send(filename);
       setSending(false);
     });
     peerInstance.current = peer;
   };
   useEffect(() => () => {
-      URL.revokeObjectURL(receivedFilePreview);
-    },[receivedFilePreview]);
-  
+    URL.revokeObjectURL(receivedFilePreview);
+  },[receivedFilePreview]);
+  const downloadFile = () => {
+    var anchor = document.createElement("a");
+    anchor.setAttribute("href", receivedFilePreview);
+    anchor.setAttribute("download", fileName);
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+  }
+  const modalClose = () => {
+    if (!sending || !receiving || !sentRequest || !requested)
+      setReceivedFilePreview("");
+    setRejected(false);
+  }
   return (
     <div className="App">
       <Header />
@@ -160,7 +178,7 @@ function App() {
           <Heading size="lg" style={{opacity: 0.5}}>Drag and drop or click on a user to send a file</Heading>
         </Center>
         {usersList.length > 1 ? usersList.map(({username, timestamp}) => username !== myUsername &&
-          <PeerAvatar key={username} myUsername={username} timestamp={timestamp} sendRequest={sendRequest} disabled={!file || loading} setFile={setFile}/>
+          <PeerAvatar key={username} myUsername={username} timestamp={timestamp} sendRequest={sendRequest} disabled={!file || loading} setFile={setFile} setFileName={setFileName}/>
           ) :
           <Text>
             <Center>
@@ -169,32 +187,49 @@ function App() {
           </Text>
         }
       </Box>
-      <Modal isOpen={isOpen} onOpen={receivedFilePreview !== "" || sending || receiving || sentRequest || rejected || requested} 
-        onClose={() => {
-          if (!sending || !receiving || !sentRequest || !requested)
-            setReceivedFilePreview("");
-          setRejected(false);
-        }}>
+      <Modal isCentered isOpen={receivedFilePreview !== "" || sending || receiving || sentRequest || rejected || requested} onClose={modalClose}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Request sent</ModalHeader>
             {requested &&
-            <ShareRequest acceptRequest={acceptRequest} rejectRequest={rejectRequest} peerUsername={peerUsername} />
+            <>
+              <ModalHeader>File Transfer Request</ModalHeader>
+              <ModalBody>
+                <ShareRequest acceptRequest={acceptRequest} rejectRequest={rejectRequest} peerUsername={peerUsername} />
+              </ModalBody>
+            </>
+            }
+            {(sending || receiving || sentRequest) &&
+              <ModalBody>
+                <Spinner
+                  thickness="4px"
+                  speed="0.75s"
+                  emptyColor="gray.200"
+                  color="#6A4DF4"
+                  size="xl"
+                />
+              </ModalBody>
             }
             {rejected &&
-            <ModalBody>{`${peerUsername} rejected your request, sorry!`}</ModalBody>
+            <>
+              <ModalBody>{`${peerUsername} rejected your request, sorry!`}</ModalBody>
+              <ModalFooter>
+                <Button onClick={modalClose}>Close</Button>
+              </ModalFooter>
+            </>
             }
             {receivedFilePreview &&
-              toast({
-                title: "Successfully received",
-                description: `${peerUsername} sent you a file`,
-                status: "success",
-                duration: 6000,
-                isClosable: true,
-              }),
-              <Box>
-                <Image src={receivedFilePreview} />
-              </Box>
+              <>
+                <ModalHeader>{peerUsername} has sent you a file: {fileName}</ModalHeader>
+                <ModalBody>
+                  <Image src={receivedFilePreview} />
+                </ModalBody>
+                <ModalFooter>
+                  <ButtonGroup variant="solid" space={6}>
+                    <Button onClick={modalClose}>Ignore</Button>
+                    <Button onClick={downloadFile}>Download</Button>
+                  </ButtonGroup>
+                </ModalFooter>
+              </>
             }
           </ModalContent>
       </Modal>

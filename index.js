@@ -38,6 +38,7 @@ function Log(message, data){
     console.log((new Date()).toISOString(),message, data);
 };
 
+
 io.on("connection", (socket) => {
     //generate username against a socket connection and store it
     const username = usernameGen.generateUsername("-");
