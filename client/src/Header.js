@@ -8,17 +8,18 @@ import {
   Button,
   useDisclosure,
   Spacer,
-  IconButton
+  IconButton,
+  Link
 } from "@chakra-ui/react";
 import { LinkIcon } from "@chakra-ui/icons";
 import ThemeToggle from "./ThemeToggle";
 import { RiGithubFill } from 'react-icons/ri'
 import InfoModal from "./Modal"
+import {RiMoneyDollarCircleLine} from "react-icons/ri"
 
 
-const Header = (props) => {
+const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  
 
   return (
     <Flex>
@@ -32,14 +33,25 @@ const Header = (props) => {
         </HStack>
         <Spacer />
         <Box>
-            <ThemeToggle />
-            <IconButton
-            icon={<Icon w={8} h={8} as={RiGithubFill} />}
-            size="lg"
-            aria-label="github"
-            variant="ghost"
-            />
+            <ThemeToggle/>
+            <Link href="https://github.com/ccarraher/pairdrop/">
+              <IconButton
+                icon={<Icon w={8} h={8} as={RiGithubFill} />}
+                size="lg"
+                aria-label="github"
+                variant="ghost"
+              />
+            </Link>
             <InfoModal />
+            <Link href="https://www.paypal.com/donate?business=QRR8PJ3CZ2TXE&no_recurring=0&item_name=Help+pay+server+costs+and+development+time&currency_code=USD">
+              <IconButton 
+                icon={<Icon w={9} h={9} as={RiMoneyDollarCircleLine} />}
+                aria-label="Donate"
+                name="Help with server costs!"
+                variant="ghost"
+                size="lg"                        
+              />
+            </Link>
         </Box>
     </Flex>
   );

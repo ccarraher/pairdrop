@@ -167,7 +167,7 @@ function App() {
   }
   return (
     <div className="App">
-      <Header />
+      <Header/>
       <Heading className="username-header" p={20}>
         <Center className="username-div">
           Others will see you as: <span style={{color: "#6A4DF4", fontWeight: "bolder"}}>{myUsername}</span>

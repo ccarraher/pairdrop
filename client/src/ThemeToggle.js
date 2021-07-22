@@ -4,7 +4,8 @@ import { IconButton, useColorMode, useColorModeValue } from '@chakra-ui/react'
 
 export default function ThemeToggle() {
     const { toggleColorMode: toggleMode } = useColorMode();
-    const ToggleIcon = useColorModeValue(SunIcon, MoonIcon)
+    const ToggleIcon = useColorModeValue(MoonIcon, SunIcon)
+    const hoverColor = useColorModeValue("#EDF2F7", "#141923");
     return (
         <IconButton
             icon={<ToggleIcon w={7} h={7}/>}

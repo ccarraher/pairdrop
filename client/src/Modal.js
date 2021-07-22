@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, useDisclosure, Button, IconButton, Heading } from '@chakra-ui/react'
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, useDisclosure, Button, IconButton, Heading, Link, Icon } from '@chakra-ui/react'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 
 export default function InfoModal() {
