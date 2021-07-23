@@ -2,13 +2,19 @@ const path = require('path')
 const usernameGen = require("username-generator");
 const express = require('express')
 const app = express()
-const http = require("http").createServer(app);
-const io = require("socket.io")(http, {
+const https = require("https").createServer(app);
+const io = require("socket.io")(https, {
   cors: {
     origin: "*",
   },
 });
 app.use(express.static(path.join(__dirname, 'client/build')));
+app.use((req, res, next) => {
+  if (req.header('x-fowarded-proto') !== 'https')
+    res.redirect(`https://${req.header('pairdrop.xyz')}${req.url}`)
+  else
+    next();
+})
 
 const SOCKET_EVENT = {
     CONNECTED: "connected",
@@ -81,5 +87,5 @@ io.on("connection", (socket) => {
     });
 });
 const port = process.env.PORT || 7000;
-http.listen(port);
+https.listen(port);
 Log("server listening on port", port);
