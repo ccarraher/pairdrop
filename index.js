@@ -2,6 +2,7 @@ const path = require('path')
 const usernameGen = require("username-generator");
 const express = require('express')
 const app = express()
+var secure = require('ssl-express-www');
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
   cors: {
@@ -9,6 +10,7 @@ const io = require("socket.io")(http, {
   },
 });
 app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(secure);
 
 const SOCKET_EVENT = {
     CONNECTED: "connected",
