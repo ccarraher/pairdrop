@@ -2,8 +2,8 @@ const path = require('path')
 const usernameGen = require("username-generator");
 const express = require('express')
 const app = express()
-const https = require("https").createServer(app);
-const io = require("socket.io")(https, {
+const http = require("http").createServer(app);
+const io = require("socket.io")(http, {
   cors: {
     origin: "*",
   },
@@ -87,5 +87,5 @@ io.on("connection", (socket) => {
     });
 });
 const port = process.env.PORT || 7000;
-https.listen(port);
+http.listen(port);
 Log("server listening on port", port);
