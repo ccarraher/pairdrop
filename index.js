@@ -2,7 +2,6 @@ const path = require('path')
 const usernameGen = require("username-generator");
 const express = require('express')
 const app = express()
-var secure = require('ssl-express-www');
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
   cors: {
