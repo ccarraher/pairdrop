@@ -10,7 +10,6 @@ const io = require("socket.io")(http, {
   },
 });
 app.use(express.static(path.join(__dirname, 'client/build')));
-app.use(secure);
 
 const SOCKET_EVENT = {
     CONNECTED: "connected",
