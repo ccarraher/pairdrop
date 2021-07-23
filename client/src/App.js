@@ -47,7 +47,7 @@ function App() {
       { urls: "stun:stun4.l.google.com:19302" }
     ]
   }
-  const SERVER_URL = "http://pairdrop.xyz";
+  const SERVER_URL = "https://fierce-plains-31659.herokuapp.com";
   useEffect(() => {
     socket.current = io.connect(SERVER_URL);
 
