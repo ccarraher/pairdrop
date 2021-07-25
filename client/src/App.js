@@ -13,7 +13,6 @@ function App() {
   const [sending, setSending] = useState(false);
   const [receiving, setReceiving] = useState(false);
   const [rejected, setRejected] = useState(false);
-  const [accepted, setAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [myUsername, setMyUsername] = useState("");
   const [usersList, setUsersList] = useState([]);
@@ -44,7 +43,7 @@ function App() {
       { urls: "stun:stun4.l.google.com:19302" }
     ]
   }
-  const SERVER_URL = "https://pairdrop.xyz";
+  const SERVER_URL = "https://fierce-plains-31659.herokuapp.com";
   useEffect(() => {
     socket.current = io.connect(SERVER_URL);
 
@@ -75,7 +74,6 @@ function App() {
 
   const acceptRequest = () => {
     setRequested(false);
-    setAccepted(true);
     const peer = new Peer({
       initiator: false,
       trickle: false
@@ -211,14 +209,6 @@ function App() {
                   size="xl"
                 />
               </ModalBody>
-            }
-            {accepted &&
-            <>
-              <ModalBody>{`${peerUsername} accepted your request!`}</ModalBody>
-              <ModalFooter>
-                <Button onClick={modalClose}>Close</Button>
-              </ModalFooter>
-            </>
             }
             {rejected &&
             <>
