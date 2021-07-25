@@ -13,6 +13,7 @@ function App() {
   const [sending, setSending] = useState(false);
   const [receiving, setReceiving] = useState(false);
   const [rejected, setRejected] = useState(false);
+  const [accepted, setAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [myUsername, setMyUsername] = useState("");
   const [usersList, setUsersList] = useState([]);
@@ -78,9 +79,10 @@ function App() {
 
   const acceptRequest = () => {
     setRequested(false);
+    setAccepted(true);
     const peer = new Peer({
       initiator: false,
-      trickle: true
+      trickle: false
     });
     peer.on("signal", data => {
       socket.current.emit(SOCKET_EVENT.ACCEPT_REQUEST, {
@@ -167,10 +169,15 @@ function App() {
   }
   return (
     <div className="App">
-      <Header/>
-      <Heading className="username-header" p={20}>
+      <Header />
+      <Heading className="username-header">
         <Center className="username-div">
-          Others will see you as: <span style={{color: "#6A4DF4", fontWeight: "bolder"}}>{myUsername}</span>
+          Others will see you as:
+        </Center>
+      </Heading>
+      <Heading style={{color: "#6A4DF4", fontWeight:"bolder"}} p={5}>
+        <Center>
+          {myUsername}
         </Center>
       </Heading>
       <Box>
@@ -194,7 +201,7 @@ function App() {
             <>
               <ModalHeader>File Transfer Request</ModalHeader>
               <ModalBody>
-                <ShareRequest acceptRequest={acceptRequest} rejectRequest={rejectRequest} peerUsername={peerUsername} />
+                <ShareRequest acceptRequest={acceptRequest} rejectRequest={rejectRequest} peerUsername={peerUsername}/>
               </ModalBody>
             </>
             }
@@ -208,6 +215,14 @@ function App() {
                   size="xl"
                 />
               </ModalBody>
+            }
+            {accepted &&
+            <>
+              <ModalBody>{`${peerUsername} accepted your request!`}</ModalBody>
+              <ModalFooter>
+                <Button onClick={modalClose}>Close</Button>
+              </ModalFooter>
+            </>
             }
             {rejected &&
             <>
