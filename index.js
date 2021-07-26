@@ -9,6 +9,12 @@ const io = require("socket.io")(http, {
   },
 });
 app.use(express.static(path.join(__dirname, 'client/build')));
+app.use((req, res, next) => {
+  if (req.header('x-fowarded-proto') !== 'https')
+    res.redirect(`https://${req.header('host')}${req.url}`)
+  else
+    next();
+})
 
 const SOCKET_EVENT = {
     CONNECTED: "connected",
