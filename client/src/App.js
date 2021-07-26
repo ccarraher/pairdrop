@@ -23,7 +23,6 @@ function App() {
   const socket = useRef();
   const { isOpen, onOpen, onClose} = useDisclosure()
   const [fileName, setFileName] = useState("");
-  const [error1, setError1] = useState(null);
 
   const peerInstance = useRef();
 
@@ -89,9 +88,6 @@ function App() {
         to: peerUsername
       });
     });
-    peer.on('error', (err) => {
-      setError1(err);
-    })
     peer.on("connect", () => {
       setReceiving(true);
     });
@@ -165,7 +161,7 @@ function App() {
     document.body.removeChild(anchor);
   }
   const modalClose = () => {
-    if (!sending || !receiving || !sentRequest || !requested || !error1)
+    if (!sending || !receiving || !sentRequest || !requested)
       setReceivedFilePreview("");
     setRejected(false);
   }
@@ -217,14 +213,6 @@ function App() {
                   size="xl"
                 />
               </ModalBody>
-            }
-            {error1 &&
-              <>
-                <ModalBody>An error occurred please refresh the page on both devices and try again.</ModalBody>
-                <ModalFooter>
-                  <Button onClick={modalClose}>Close</Button>
-                </ModalFooter>
-              </>
             }
             {rejected &&
             <>
