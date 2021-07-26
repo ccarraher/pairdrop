@@ -40,10 +40,10 @@ function App() {
 
   const peerConfig = {
     iceServers: [
-      { urls: "stun:stun.l.google.com:19302" },
-      { urls: "stun:stun1.l.google.com:19302" },
-      { urls: "stun:stun2.l.google.com:19302" },
-      { urls: "stun:stun3.l.google.com:19302" },
+      { urls: "stun:stun.l.google.com:19302?transport=tcp" },
+      { urls: "stun:stun1.l.google.com:19302?transport=tcp" },
+      { urls: "stun:stun2.l.google.com:19302?transport=tcp" },
+      { urls: "stun:stun3.l.google.com:19302?transport=tcp" },
       { urls: "turn:numb.viagenie.ca",
         credential: "muazkh",
         username: "webrtc@live.com" 
