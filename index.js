@@ -5,7 +5,7 @@ const app = express()
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
   cors: {
-    origin: ["http://fierce-plains-31659.herokuapp.com, http://pairdrop.xyz, https://www.pairdrop.xyz, https://pairdrop.xyz, https://www.pairdrop.xyz"],
+    origin: ["http://fierce-plains-31659.herokuapp.com", "http://pairdrop.xyz", "https://www.pairdrop.xyz", "https://pairdrop.xyz", "https://pairdrop.xyz", "https://fierce-plains-31659.herokuapp.com"],
   },
 });
 app.use(express.static(path.join(__dirname, 'client/build')));
