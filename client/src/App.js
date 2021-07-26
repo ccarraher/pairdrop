@@ -165,7 +165,7 @@ function App() {
     document.body.removeChild(anchor);
   }
   const modalClose = () => {
-    if (!sending || !receiving || !sentRequest || !requested)
+    if (!sending || !receiving || !sentRequest || !requested || !error1)
       setReceivedFilePreview("");
     setRejected(false);
   }
@@ -196,7 +196,7 @@ function App() {
           </Text>
         }
       </Box>
-      <Modal isCentered isOpen={receivedFilePreview !== "" || sending || receiving || sentRequest || rejected || requested} onClose={modalClose}>
+      <Modal isCentered isOpen={receivedFilePreview !== "" || sending || receiving || sentRequest || rejected || requested || error1} onClose={modalClose}>
           <ModalOverlay />
           <ModalContent>
             {requested &&
