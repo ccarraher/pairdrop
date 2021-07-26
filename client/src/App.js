@@ -40,10 +40,14 @@ function App() {
 
   const peerConfig = {
     iceServers: [
-      { urls: "stun:stun4.l.google.com:19302" }
+      { urls: "stun:stun.l.google.com:19302" },
+      { username: "dc2d2894d5a9023620c467b0e71cfa6a35457e6679785ed6ae9856fe5bdfa269",
+      credential: "tE2DajzSJwnsSbc123",
+      url: "turn:global.turn.twilio.com:443?transport=tcp",
+      urls: "turn:global.turn.twilio.com:443?transport=tcp"}
     ]
   }
-  const SERVER_URL = "https://fierce-plains-31659.herokuapp.com";
+  const SERVER_URL = "https://pairdrop.xyz";
   useEffect(() => {
     socket.current = io.connect(SERVER_URL);
 
