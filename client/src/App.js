@@ -79,7 +79,8 @@ function App() {
     setRequested(false);
     const peer = new Peer({
       initiator: false,
-      trickle: false
+      trickle: false,
+      config: peerConfig
     });
     peer.on("signal", data => {
       socket.current.emit(SOCKET_EVENT.ACCEPT_REQUEST, {
