@@ -22,7 +22,7 @@ function App() {
   const [receivedFilePreview, setReceivedFilePreview] = useState("");
   const socket = useRef();
   const { isOpen, onOpen, onClose} = useDisclosure()
-  //const [fileName, setFileName] = useState("");
+  const [fileName, setFileName] = useState("");
 
   const peerInstance = useRef();
 
@@ -46,7 +46,7 @@ function App() {
       { urls: "stun:stun3.l.google.com:19302" }
     ]
   }
-  const SERVER_URL = "http://localhost:7000";
+  const SERVER_URL = "https://pairdrop.xyz";
   useEffect(() => {
     socket.current = io.connect(SERVER_URL);
 
@@ -100,9 +100,9 @@ function App() {
       } else {
         fileChunks.push(data);
       }
-      //let lastItem = fileChunks[fileChunks.length - 1];
-      //let file_name = lastItem.toString();
-     // setFileName(file_name);
+      let lastItem = fileChunks[fileChunks.length - 1];
+      let file_name = lastItem.toString();
+      setFileName(file_name);
     });
     peer.signal(peerSignal);
     peerInstance.current = peer;
@@ -135,7 +135,7 @@ function App() {
       setSentRequest(false);
       let buffer = await file.arrayBuffer();
       const chunkSize = 16 * 1024;
-      //let filename = file.name;
+      let filename = file.name;
       while (buffer.byteLength) {
         const chunk = buffer.slice(0, chunkSize);
         buffer = buffer.slice(chunkSize, buffer.byteLength);
@@ -143,7 +143,7 @@ function App() {
         peer.send(chunk);
       }
       peer.send("EOF");
-      //peer.send(filename);
+      peer.send(filename);
       setSending(false);
     });
     peerInstance.current = peer;
@@ -154,7 +154,7 @@ function App() {
   const downloadFile = () => {
     var anchor = document.createElement("a");
     anchor.setAttribute("href", receivedFilePreview);
-    //anchor.setAttribute("download", fileName);
+    anchor.setAttribute("download", fileName);
     document.body.appendChild(anchor);
     anchor.click();
     document.body.removeChild(anchor);
@@ -223,7 +223,7 @@ function App() {
             }
             {receivedFilePreview &&
               <>
-                <ModalHeader>{peerUsername} has sent you a file: </ModalHeader>
+                <ModalHeader>{peerUsername} has sent you a file: {fileName}</ModalHeader>
                 <ModalBody>
                   <Image src={receivedFilePreview} />
                 </ModalBody>
