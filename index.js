@@ -1,3 +1,4 @@
+import sslRedirect from 'heroku-ssl-redirect';
 const path = require('path')
 const fs = require('fs');
 const usernameGen = require("username-generator");
@@ -8,16 +9,15 @@ const options = {
   cert: process.env.crt,
   key: process.env.key
 }
-app.use(helmet()); //Helmet as middleware
 
 const https = require("https").createServer(options, app);
 const io = require("socket.io")(https, {
   cors: {
-    origin: "*",
+    origin: "https://pairdrop.xyz",
   },
 });
 app.use(express.static(path.join(__dirname, 'client/build')));
-
+app.use(sslRedirect());
 const SOCKET_EVENT = {
     CONNECTED: "connected",
     DISCONNECTED: "disconnect",
