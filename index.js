@@ -1,9 +1,17 @@
 const path = require('path')
+const fs = require('fs');
 const usernameGen = require("username-generator");
 const express = require('express')
 const app = express()
-const http = require("http").createServer(app);
-const io = require("socket.io")(http, {
+const http = require('http');
+const options = {
+  cert: process.env.crt,
+  key: process.env.key
+}
+app.use(helmet()); //Helmet as middleware
+
+const https = require("https").createServer(options, app);
+const io = require("socket.io")(https, {
   cors: {
     origin: "*",
   },
@@ -80,6 +88,7 @@ io.on("connection", (socket) => {
       Log(SOCKET_EVENT.REJECT_REQUEST, username);
     });
 });
-const port = process.env.PORT || 7000;
-http.listen(port);
+const port = process.env.PORT || 434;
+http.createServer(app).listen(80);
+https.listen(port);
 Log("server listening on port", port);
