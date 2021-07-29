@@ -1,4 +1,3 @@
-import sslRedirect from 'heroku-ssl-redirect';
 const path = require('path')
 const usernameGen = require("username-generator");
 const express = require('express')
@@ -7,15 +6,19 @@ const options = {
   cert: process.env.crt,
   key: process.env.key
 };
-
-const https = require("https").createServer(options, app);
-const io = require("socket.io")(https, {
-  cors: {
-    origin: "https://pairdrop.xyz",
-  },
+app.use((req, res, next) => {
+  if (req.header('x-forwarded-proto') !== 'https') {
+    res.redirect(`https://${req.header('host')}${req.url}`)
+  } else {
+    next();
+  }
 });
+const https = require("https").createServer(options, app);
+const io = require("socket.io")(https);
+
+//Run React frontend
 app.use(express.static(path.join(__dirname, 'client/build')));
-app.use(sslRedirect());
+
 const SOCKET_EVENT = {
     CONNECTED: "connected",
     DISCONNECTED: "disconnect",
