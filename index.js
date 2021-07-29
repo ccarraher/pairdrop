@@ -4,7 +4,6 @@ const fs = require('fs');
 const usernameGen = require("username-generator");
 const express = require('express')
 const app = express()
-const http = require('http');
 const options = {
   cert: process.env.crt,
   key: process.env.key
@@ -89,6 +88,5 @@ io.on("connection", (socket) => {
     });
 });
 const port = process.env.PORT || 434;
-http.createServer(app).listen(80);
 https.listen(port);
 Log("server listening on port", port);
