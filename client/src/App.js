@@ -46,7 +46,7 @@ function App() {
       { urls: "stun:stun3.l.google.com:19302" }
     ]
   }
-  const SERVER_URL = "https://pairdrop.xyz";
+  const SERVER_URL = "https://pairdrop.xyz:443";
   useEffect(() => {
     socket.current = io.connect(SERVER_URL);
 
