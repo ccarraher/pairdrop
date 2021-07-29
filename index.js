@@ -2,10 +2,7 @@ const path = require('path')
 const usernameGen = require("username-generator");
 const express = require('express')
 const app = express()
-const options = {
-  cert: process.env.crt,
-  key: process.env.key
-};
+
 app.use((req, res, next) => {
   if (req.header('x-forwarded-proto') !== 'https') {
     res.redirect(`https://${req.header('host')}${req.url}`)
@@ -13,8 +10,8 @@ app.use((req, res, next) => {
     next();
   }
 });
-const https = require("https").createServer(options, app);
-const io = require("socket.io")(https);
+const http = require("https").createServer(app);
+const io = require("socket.io")(http);
 
 //Run React frontend
 app.use(express.static(path.join(__dirname, 'client/build')));
@@ -90,5 +87,5 @@ io.on("connection", (socket) => {
     });
 });
 const port = process.env.PORT || 7000;
-https.listen(port);
+http.listen(port);
 Log("server listening on port", port);
