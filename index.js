@@ -1,13 +1,12 @@
 import sslRedirect from 'heroku-ssl-redirect';
 const path = require('path')
-const fs = require('fs');
 const usernameGen = require("username-generator");
 const express = require('express')
 const app = express()
 const options = {
   cert: process.env.crt,
   key: process.env.key
-}
+};
 
 const https = require("https").createServer(options, app);
 const io = require("socket.io")(https, {
@@ -87,6 +86,6 @@ io.on("connection", (socket) => {
       Log(SOCKET_EVENT.REJECT_REQUEST, username);
     });
 });
-const port = process.env.PORT || 434;
+const port = process.env.PORT || 443;
 https.listen(port);
 Log("server listening on port", port);
