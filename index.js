@@ -89,6 +89,6 @@ io.on("connection", (socket) => {
       Log(SOCKET_EVENT.REJECT_REQUEST, username);
     });
 });
-const port = 443;
+const port = process.env.PORT || 7000;
 https.listen(port);
 Log("server listening on port", port);
