@@ -10,7 +10,7 @@ app.use((req, res, next) => {
     next();
   }
 });
-const http = require("https").createServer(app);
+const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 
 //Run React frontend
