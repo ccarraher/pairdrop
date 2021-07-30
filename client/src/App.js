@@ -42,7 +42,7 @@ function App() {
     iceServers: [
       { urls: "stun:stun3.l.google.com:19302" },
       { urls: "turn:numb.viagenie.ca",
-        crediential: "muazkh",
+        credential: "muazkh",
         username: "webrtc@live.com"
       }
     ]
