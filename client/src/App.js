@@ -40,9 +40,11 @@ function App() {
 
   const peerConfig = {
     iceServers: [
-      { urls: "stun:stun.l.google.com:19302" },
-      { urls: "stun:stun1.l.google.com:19302" },
-      { urls: "stun:stun2.l.google.com:19302" },
+      { urls: "stun:stun3.l.google.com:19302" },
+      { urls: "turn:numb.viagenie.ca",
+        crediential: "muazkh",
+        username: "webrtc@live.com"
+      }
     ]
   }
   const SERVER_URL = "https://pairdrop.xyz";
