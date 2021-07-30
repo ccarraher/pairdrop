@@ -119,7 +119,7 @@ function App() {
     setPeerUsername(username);
     const peer = new Peer({
       initiator: true,
-      trickle: false,
+      trickle: true,
       config: peerConfig
     });
     peer.on("signal", data => {
