@@ -42,7 +42,7 @@ function App() {
   const peerConfig = {
     iceServers: [
       { urls: "stun:stun3.l.google.com:19302" },
-      { urls: "turn:pairdrop.xyz:3478?transport=tcp",
+      { urls: "turn:18.191.55.80:3478",
         credential: "pass",
         username: "ccarraher",
       },
