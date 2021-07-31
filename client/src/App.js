@@ -24,6 +24,7 @@ function App() {
   const { isOpen, onOpen, onClose} = useDisclosure()
   const [fileName, setFileName] = useState("");
 
+
   const peerInstance = useRef();
 
   const SOCKET_EVENT = {
@@ -40,10 +41,10 @@ function App() {
 
   const peerConfig = {
     iceServers: [
-      { urls: "stun:stun.l.google.com:19302" },
-      { urls: "turn:numb.viagenie.ca",
-        credential: "muazkh",
-        username: "webrtc@live.com"
+      { urls: "stun:stun3.l.google.com:19302" },
+      { urls: "turn:pairdrop.xyz:3478?transport=tcp",
+        credential: "pass",
+        username: "ccarraher"
       }
     ]
   }
@@ -80,7 +81,7 @@ function App() {
     setRequested(false);
     const peer = new Peer({
       initiator: false,
-      trickle: true
+      trickle: false
     });
     peer.on("signal", data => {
       socket.current.emit(SOCKET_EVENT.ACCEPT_REQUEST, {
@@ -119,7 +120,7 @@ function App() {
     setPeerUsername(username);
     const peer = new Peer({
       initiator: true,
-      trickle: true,
+      trickle: false,
       config: peerConfig
     });
     peer.on("signal", data => {
