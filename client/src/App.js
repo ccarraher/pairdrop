@@ -94,7 +94,6 @@ function App() {
     });
     const fileChunks = [];
     peer.on("data", data => {
-      console.log(data.toString());
       if (data.toString() === "EOF") {
         const file_blob = new Blob(fileChunks);
         setReceivedFilePreview(URL.createObjectURL(file_blob));
@@ -205,15 +204,19 @@ function App() {
             </>
             }
             {(sending || receiving || sentRequest) &&
-              <ModalBody>
-                <Spinner
-                  thickness="4px"
-                  speed="0.75s"
-                  emptyColor="gray.200"
-                  color="#6A4DF4"
-                  size="xl"
-                />
-              </ModalBody>
+              <>
+                <ModalHeader>Sending...</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Spinner
+                    thickness="4px"
+                    speed="0.75s"
+                    emptyColor="gray.200"
+                    color="#6A4DF4"
+                    size="xl"
+                  />
+                </ModalBody>
+              </>
             }
             {rejected &&
             <>
@@ -227,7 +230,7 @@ function App() {
               <>
                 <ModalHeader>{peerUsername} has sent you a file: {fileName}</ModalHeader>
                 <ModalBody>
-                  <Image maxWidth src={receivedFilePreview} />
+                  <Image style={{maxHeight: "50vh"}} src={receivedFilePreview} />
                 </ModalBody>
                 <ModalFooter>
                   <ButtonGroup variant="solid" space={6}>
