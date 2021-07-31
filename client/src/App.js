@@ -44,8 +44,8 @@ function App() {
       { urls: "stun:stun3.l.google.com:19302" },
       { urls: "turn:pairdrop.xyz:3478?transport=tcp",
         credential: "pass",
-        username: "ccarraher"
-      }
+        username: "ccarraher",
+      },
     ]
   }
   const SERVER_URL = "https://pairdrop.xyz";
